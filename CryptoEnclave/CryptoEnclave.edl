@@ -1,0 +1,80 @@
+enclave {
+
+    from "sgx_tstdc.edl" import *;
+    
+    
+
+    trusted {
+
+        public void ecall_init([in,size=len] unsigned char *keyF1,[in,size=len] unsigned char *keyF2,[in,size=len] unsigned char *keyF3,[in,size=len] unsigned char *keyF4,size_t len);
+        
+        // public void ecall_addDoc([in, size=id_length] char *doc_id, size_t id_length, [in, size=content_length] char *content, int content_length);
+        // public void ecall_delDoc([in, size=id_length] char *doc_id, size_t id_length);
+        // public void ecall_search([in, size=len] const char *keyword, size_t len);
+        // //fisher added
+        // public void ecall_printHelloWorld();
+        // public void ecall_InsertVct(int vword,int c,int t);
+        // public void ecall_searchToken([in,size = token_len]unsigned char * token,int token_len);
+        // public void ecall_search_tkq([in,size = token_len]unsigned char * token,int token_len);
+        // public void ecall_verifyIDEnc([in, size=len]unsigned char *ID,size_t len);
+
+        // public void ecall_SendOpIdN(int op,[in,size = len]unsigned char * IdN,int len);
+    };
+
+    untrusted {
+
+        // void ocall_print_string([in, string] const char *str);
+        // void ocall_transfer_encrypted_entries([in, count= pair_count, size=rand_size] const void *t1_u_arr, 
+		// 							            [in, count= pair_count, size=rand_size] const void *t1_v_arr, 
+		// 							            [in, count= pair_count, size=rand_size] const void *t2_u_arr, 
+		// 							            [in, count= pair_count, size=rand_size] const void *t2_v_arr,
+		// 							            int pair_count, int rand_size);
+         
+        // void ocall_retrieve_encrypted_doc([in, size=del_id_len] const char *del_id, size_t del_id_len, 
+        //                                   [out, size=maxLen] unsigned char *encrypted_content, size_t maxLen,
+        //                                   [out, count=int_len] int *length_content, size_t int_len);
+        
+        // void ocall_del_encrypted_doc([in, size=del_id_len] const char *del_id, size_t del_id_len);
+        
+        // void ocall_retrieve_M_c([in, size=_u_prime_size] unsigned char * _u_prime, size_t _u_prime_size,
+        //                              [out, size=maxLen] unsigned char *_v_prime, size_t maxLen,
+        //                              [out, count=int_len] int *_v_prime_size, size_t int_len);
+        
+        // void ocall_del_M_c_value([in, size=_u_prime_size] const unsigned char *_u_prime, size_t _u_prime_size);
+
+        // void ocall_query_tokens_entries([in, count= pair_count, size=rand_size] const void *Q_w_u_arr,
+        //                        [in, count= pair_count, size=rand_size] const void *Q_w_id_arr,
+        //                        int pair_count, int rand_size);
+
+        // //fisher added!!
+        // void ocall_retrieve_VGama([in,size = L_length] unsigned char * L_text,
+        //                                 int L_length,
+        //                                 [out,size = V_length] unsigned char * V_text,
+        //                                 int V_length,
+        //                                 [out,size = Gama_length] unsigned char * Gama_text,
+        //                                 int Gama_length);
+
+        // void ocall_receive_VxGamaX([in,size = vx_length] unsigned char * vx_text,int vx_length,
+        //             [in,size = gamax_plain_len ] unsigned char * gamax_plain,int gamax_plain_len,
+        //             int vi);
+
+        // void ocall_receive_R([in,size = R_len] unsigned char *R,int R_len);
+
+        // void ocall_sendLVGAMA([in,size = L2_len]unsigned char * L2,int L2_len,
+        // [in,size = V2_len]unsigned char *V2,int V2_len,
+        // [in,size = gama_X2_len]unsigned char *gama_X2_plain,int gama_X2_len);
+
+
+        // void ocall_retrieve_PKi([in,size=addr_len] unsigned char *Addr,int addr_len,[out,size = PK_len]unsigned char * PKi,int PK_len);
+        // void ocall_transfer_uv_pairs([in, count= pair_count, size=rand_size] const void *u_arr, 
+		// 							            [in, count= pair_count, size=rand_size] const void *v_arr, 
+		// 							            int pair_count, int rand_size);
+
+        // void ocall_Retrieve_V_FromT1([in, size=u_len] unsigned char * u, size_t u_len,
+        //                              [out, size=v_len] unsigned char *v, size_t v_len,
+        //                              [out, count=int_len] int *content_length, size_t int_len);
+
+        // void ocall_transfer_V([in, count= pair_count, size=rand_size] const void *v_arr, 
+        //                                 int pair_count, int rand_size);                                    
+    };
+};
