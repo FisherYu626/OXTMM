@@ -46,7 +46,7 @@ else
 endif
 
 App_Cpp_Files := $(wildcard CryptoTestingApp/*.cpp)
-App_Include_Paths := -IApp -I$(SGX_SDK)/include -I/usr/include -I/usr/include/openssl -I/usr/local/include
+App_Include_Paths := -I$(SGX_SDK)/include -I/usr/include -I/usr/include/openssl -I/usr/local/include
 
 App_C_Flags := $(SGX_COMMON_CFLAGS) -fPIC -Wno-attributes $(App_Include_Paths)
 
@@ -64,7 +64,7 @@ else
 endif
 
 App_Cpp_Flags := $(App_C_Flags) -std=c++11
-App_Link_Flags := $(SGX_COMMON_CFLAGS) -L$(SGX_LIBRARY_PATH) -l$(Urts_Library_Name) -lpthread -lpcap -L$(SGXSSL_LIB_PATH) -lsgx_usgxssl -lssl -lcrypto -lsnappy -lgmp -lpbc
+App_Link_Flags := $(SGX_COMMON_CFLAGS) -L$(SGX_LIBRARY_PATH) -l$(Urts_Library_Name) -lpthread -lpcap -L$(SGXSSL_LIB_PATH) -lsgx_usgxssl -lssl -lcrypto -lgmp -lpbc
 
 ifneq ($(SGX_MODE), HW)
 	App_Link_Flags += -lsgx_uae_service_sim

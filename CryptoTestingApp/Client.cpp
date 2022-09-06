@@ -12,7 +12,6 @@
 #include <iterator> // for std::begin, std::end
 #include <cstring> 
 #include <openssl/rand.h>
-#include <snappy.h>
 
 //fisher altered!
 Client::Client(){
@@ -41,49 +40,49 @@ void Client::getKFValues(unsigned char * outKey1,unsigned char * outKey2,unsigne
     memcpy(outKey3,KH,ENC_KEY_SIZE);
 }
 
-void Client::ReadNextDoc(docContent *content){
-    std::ifstream inFile;
-    std::stringstream strStream;
-    //docContent content;
+// void Client::ReadNextDoc(docContent *content){
+//     std::ifstream inFile;
+//     std::stringstream strStream;
+//     //docContent content;
 
-    //increase counter
-    file_reading_counter+=1;
+//     //increase counter
+//     file_reading_counter+=1;
 
-    std::string fileName;
-    fileName = std::to_string(file_reading_counter);
-    /** convert fileId to char* and record length */
-    int doc_id_size = fileName.length() +1;
+//     std::string fileName;
+//     fileName = std::to_string(file_reading_counter);
+//     /** convert fileId to char* and record length */
+//     int doc_id_size = fileName.length() +1;
     
-    content->id.doc_id = (char*) malloc(doc_id_size);
-    memcpy(content->id.doc_id, fileName.c_str(),doc_id_size);
-    content->id.id_length = doc_id_size;
+//     content->id.doc_id = (char*) malloc(doc_id_size);
+//     memcpy(content->id.doc_id, fileName.c_str(),doc_id_size);
+//     content->id.id_length = doc_id_size;
 
-    //查看读取文档id
-    std::cout<<"<"<<content->id.doc_id<<">"<<std::endl;
+//     //查看读取文档id
+//     std::cout<<"<"<<content->id.doc_id<<">"<<std::endl;
 
-    //read the file content raw_doc_dir "/streaming"
-    inFile.open( raw_doc_dir + fileName+".txt"); 
-    strStream << inFile.rdbuf();
-    inFile.close();
-
-
-    std::string str = strStream.str();
-    int plaintext_len;
-    plaintext_len = str.length()+1;
-
-    content->content = (char*)malloc(plaintext_len);
+//     //read the file content raw_doc_dir "/streaming"
+//     inFile.open( raw_doc_dir + fileName+".txt"); 
+//     strStream << inFile.rdbuf();
+//     inFile.close();
 
 
-    memcpy(content->content, str.c_str(),plaintext_len);
-    // std::cout<<str.c_str()<<std::endl;
-    content->content_length = plaintext_len;
-    //std::cout<<"here is the ids"<<std::endl;
-    //查看读取文档的内容ids
-    //std::cout<<str.c_str()<<std::endl;
+//     std::string str = strStream.str();
+//     int plaintext_len;
+//     plaintext_len = str.length()+1;
 
-    strStream.clear();
+//     content->content = (char*)malloc(plaintext_len);
 
-}
+
+//     memcpy(content->content, str.c_str(),plaintext_len);
+//     // std::cout<<str.c_str()<<std::endl;
+//     content->content_length = plaintext_len;
+//     //std::cout<<"here is the ids"<<std::endl;
+//     //查看读取文档的内容ids
+//     //std::cout<<str.c_str()<<std::endl;
+
+//     strStream.clear();
+
+// }
 
 // void Client::PaddingCompressdata(std::string & CompressData){
 //     //为加密保存上下文的28个字节进行预留空间
@@ -623,7 +622,7 @@ void Client::ReadNextDoc(docContent *content){
 
 
 void Client:: ReadInvertedIndex(){
-    std::ifstream inFile("/home/node10/fisher/F-OXTMM/Inverted_Index2.txt");
+    std::ifstream inFile("/home/node10/fisher/F-OXTMM/Inverted_Index.txt");
     if(!inFile){
         std::cout<<"Open File failed!!";
         return;
@@ -649,21 +648,20 @@ void Client:: ReadInvertedIndex(){
         MM.insert(std::pair<std::string,std::vector<std::string>> {key,v});
     }
 
-    // for(auto i:MM){
-    //     std::cout<<i.first<<"  ";
-    //     for(auto k:i.second){
-    //         std::cout<<k<<" ";
-    //     }
-    //     std::cout<<"\n";
-    // }
+    for(auto i:MM){
+        std::cout<<i.first<<"  ";
+        for(auto k:i.second){
+            std::cout<<k<<" ";
+        }
+        std::cout<<"\n";
+    }
 
     return;
 }
 
-void Client::Setup(std::vector<std::string>& KT,std::vector<std::pair<std::string, std::string>>& Stash,
-CuckooFilter<size_t, 4, 16, uint16_t> & T1,CuckooFilter<size_t, 4, 16, uint16_t>& T2){
+void Client::Setup(std::vector<std::string>& KT,std::vector<std::pair<std::string, std::string>>& Stash){
 
-    element_t g,xv,zk,y,keyi,xi,xi2;
+    element_t g,xv,zk,y,keyi,xi;
     element_init_G1(g,pairing);
     element_random(g);
     element_init_G1(xi,pairing);
@@ -691,6 +689,13 @@ CuckooFilter<size_t, 4, 16, uint16_t> & T1,CuckooFilter<size_t, 4, 16, uint16_t>
             element_from_hash(zk,(void *)keyJ1,16);
             element_div(y,xv,zk);
 
+            //y序列化
+            int yBytes_len = element_length_in_bytes(y);
+            unsigned char * yBytes = (unsigned char *)malloc(yBytes_len);
+            element_to_bytes(yBytes,y);
+            // std::cout<<yBytes_len<<"\n";
+            // print_bytes(yBytes,yBytes_len);
+
             std::string keyi0;
             keyi0 = i.first;
             unsigned char * keyi1 = (unsigned char *)malloc(AESGCM_MAC_SIZE+ AESGCM_IV_SIZE+keyi0.size());
@@ -712,16 +717,26 @@ CuckooFilter<size_t, 4, 16, uint16_t> & T1,CuckooFilter<size_t, 4, 16, uint16_t>
             //     element_set(xi,xi2);
             // }
             xlist[count].push_back(std::string((char *)xlistBytes));
-            //print_bytes(xlistBytes,xlistBytes_len);
-            //printf("%d ",xlistBytes_len);
+            // print_bytes(xlistBytes,xlistBytes_len);
+            // printf("%d ",xlistBytes_len);
+
+            //std::cout<<"everthing is ok!!";
+            YMM.push_back(std::pair<std::string,std::pair<std::string,std::string>> {i.first,{i.second[j],std::string((char *)yBytes)}});
 
             free(xv1);
             free(keyJ1);
+            free(yBytes);
             free(keyi1);
             free(xlistBytes);
         }
         count++;
     }
+    
+    for(auto i:YMM){
+        std::cout<<i.first<<" ";
+        std::cout<<i.second.first<<" "<<i.second.second<<"\n";
+    }
+    
 
     element_clear(g);
     element_clear(xv);
@@ -729,5 +744,9 @@ CuckooFilter<size_t, 4, 16, uint16_t> & T1,CuckooFilter<size_t, 4, 16, uint16_t>
     element_clear(y);
     element_clear(keyi);
     element_clear(xi);
+
+
+
+
     return;
 }

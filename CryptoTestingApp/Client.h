@@ -12,17 +12,15 @@
 #include "../common/data_type.h"
 #include "Utils.h"
 #include <vector>
-#include "cuckoo_filter.h"
 #include <pbc/pbc.h>
 
 class Client{
     public:
         Client();
 
-        void ReadNextDoc(docContent *fetch_data);
+        //void ReadNextDoc(docContent *fetch_data);
         void ReadInvertedIndex(); 
-        void Setup(std::vector<std::string>& KT,std::vector<std::pair<std::string, std::string>>& Stash,
-        CuckooFilter<size_t, 4, 16, uint16_t>& T1,CuckooFilter<size_t, 4, 16, uint16_t>& T2);
+        void Setup(std::vector<std::string>& KT,std::vector<std::pair<std::string, std::string>>& Stash);
         //fisher added
         //std::vector<std::string> Client::EncSlice(docContent *content,unsigned char * KFvalue);
 
@@ -57,7 +55,7 @@ class Client{
         
         pairing_t pairing;
         std::map<std::string,std::vector<std::string>> MM;
-
+        std::vector<std::pair<std::string,std::pair<std::string,std::string>>> YMM;
         // std::string DDOC;
 
     private:

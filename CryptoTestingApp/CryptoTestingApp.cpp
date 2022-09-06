@@ -1,4 +1,3 @@
-
 #include <string>
 #include "stdio.h"
 #include "stdlib.h"
@@ -28,7 +27,7 @@
 #include <chrono>
 #include <iostream>
 #include <fstream>
-
+#include "dprfMM.h"
 
 uint64_t timeSinceEpochMillisec() {
   using namespace std::chrono;
@@ -292,12 +291,16 @@ int main()
 
 	//cuckoo filter table size
 	size_t tableSize = 40000;
-	CuckooFilter<size_t, 4, 16, uint16_t> T1(tableSize);
-	CuckooFilter<size_t, 4, 16, uint16_t> T2(tableSize);
 
 	myClient->ReadInvertedIndex();
 
-	myClient->Setup(KT,Stash,T1,T2);
+	myClient->Setup(KT,Stash);
+
+	int n = myClient->YMM.size();
+	
+	dprfMM myDprfMM(n,"#","#");
+	myDprfMM.Setup();
+	//myClient->dprffSetup();
 	
 	/*** Saving the V to DB(v)*************************************/
 /* 		for(int i=1;i <= 3; i++){  
