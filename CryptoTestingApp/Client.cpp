@@ -669,7 +669,7 @@ void Client::Setup(std::vector<std::string>& KT,std::vector<std::pair<std::strin
     element_init_Zr(zk,pairing);
     element_init_Zr(y,pairing);
     element_init_Zr(keyi,pairing);
-    std::vector<std::vector<std::string>> xlist(MM.size(),std::vector<std::string> {});
+    xlist.resize(MM.size(),std::vector<std::string> {});
     int count = 0;
     
     for(auto i:MM){
@@ -732,10 +732,10 @@ void Client::Setup(std::vector<std::string>& KT,std::vector<std::pair<std::strin
         count++;
     }
     
-    for(auto i:YMM){
-        std::cout<<i.first<<" ";
-        std::cout<<i.second.first<<" "<<i.second.second<<"\n";
-    }
+    // for(auto i:YMM){
+    //     std::cout<<i.first<<" ";
+    //     std::cout<<i.second.first<<" "<<i.second.second<<"\n";
+    // }
     
 
     element_clear(g);

@@ -279,7 +279,7 @@ int main()
 
 
 	//fisher altered!
-	ecall_init(eid,KIvalue,KZvalue,KXvalue,KHvalue,(size_t)ENC_KEY_SIZE);
+	// ecall_init(eid,KIvalue,KZvalue,KXvalue,KHvalue,(size_t)ENC_KEY_SIZE);
 
 
 	/**************************Build Process **************************************/
@@ -298,8 +298,11 @@ int main()
 
 	int n = myClient->YMM.size();
 	
-	dprfMM myDprfMM(n,"#","#");
-	myDprfMM.Setup();
+	dprfMM * myDprfMM = new dprfMM(n,5000,5000);
+	myDprfMM->Setup(myClient->YMM);
+	
+	dprfMM * OXTMM = new dprfMM(n,5000,5000);
+	OXTMM->Setup(myClient->MM,myClient->xlist);
 	//myClient->dprffSetup();
 	
 	/*** Saving the V to DB(v)*************************************/
@@ -453,7 +456,9 @@ int main()
 	
 	delete myClient;
 	delete myServer;
-
+	delete myDprfMM;
+	delete OXTMM;
+	
 	return 0;
 }
 

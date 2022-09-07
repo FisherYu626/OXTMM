@@ -14,6 +14,7 @@
 #include <vector>
 #include <pbc/pbc.h>
 #include <openssl/rand.h>
+#include <cmath>
 
 class dprfMM{
     typedef long long ll;
@@ -21,24 +22,25 @@ class dprfMM{
 
 	public:
     dprfMM();
-    dprfMM(int _n_size,std::string _init_key, std::string _init_value);
-    void Setup(std::vector<std::pair<std::string,std::pair<std::string,std::string>>> YMM);
+    dprfMM(int _n_size,uint _init_key, uint _init_value);
+    void Setup(std::vector<std::pair<std::string,std::pair<std::string,std::string>>>& YMM);
+    void Setup(std::map<std::string,std::vector<std::string>>& MM,
+    std::vector<std::vector<std::string>>& xlist);
+    unsigned int hash_fun1(char *str);
+    unsigned int hash_fun2(char *str);
 
 
-	std::vector<std::pair<std::string, std::string> > T1;
-	std::vector<std::pair<std::string, std::string> > T2;
+	std::vector<std::pair<int, int> > T1;
+	std::vector<std::pair<int, int> > T2;
 	std::map<std::string, std::string> stash;
-	int n_size;
-    int n_count;
-	int n_per_size;
-	std::string init_value;
-	std::string init_key;
+	uint n_size;
+    uint n_count;
+	uint init_value;
+	uint init_key;
+    uint fn=100;
     unsigned char KD[ENC_KEY_SIZE];
     unsigned char KE[ENC_KEY_SIZE];
 	double _loadfactor;
-
-
-
 };
     
 #endif

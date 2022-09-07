@@ -56,6 +56,7 @@ class Client{
         pairing_t pairing;
         std::map<std::string,std::vector<std::string>> MM;
         std::vector<std::pair<std::string,std::pair<std::string,std::string>>> YMM;
+        std::vector<std::vector<std::string>> xlist;
         // std::string DDOC;
 
     private:
